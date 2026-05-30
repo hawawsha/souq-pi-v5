@@ -35,7 +35,7 @@ export default function Home() {
   useEffect(() => {  
     const initPi = async () => {  
       if (typeof window !== 'undefined' && window.Pi) {  
-        await window.Pi.init({ version: '2.0', sandbox: false });  
+        await window.Pi.init({ version: '2.0', sandbox: true });  
       } else { setTimeout(initPi, 500); }  
     };  
     initPi();  
