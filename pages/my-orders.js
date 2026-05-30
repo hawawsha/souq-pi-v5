@@ -51,7 +51,7 @@ export default function MyOrders() {
     checkHealth();
     const init = async () => {
       if (typeof window !== 'undefined' && window.Pi) {
-        await window.Pi.init({ version: '2.0', sandbox: false });
+        await window.Pi.init({ version: '2.0', sandbox: true });
         log('✅ Pi SDK جاهز');
       } else {
         log('⏳ انتظار Pi SDK...');

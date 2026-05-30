@@ -57,7 +57,7 @@ export default function Explore() {
   useEffect(() => {
     const initPi = () => {
       if (typeof window !== 'undefined' && window.Pi) {
-        window.Pi.init({ version: '4.0', sandbox: false });
+        window.Pi.init({ version: '4.0', sandbox: true });
         window.Pi.authenticate(['username', 'payments', 'wallet_address'])
           .then(auth => {
             setUser(auth.user);

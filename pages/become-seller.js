@@ -15,7 +15,7 @@ export default function BecomeSeller() {
   useEffect(() => {
     const init = () => {
       if (typeof window !== 'undefined' && window.Pi) {
-        window.Pi.init({ version: '2.0', sandbox: false });
+        window.Pi.init({ version: '2.0', sandbox: true });
       } else { setTimeout(init, 500); }
     };
     init();
