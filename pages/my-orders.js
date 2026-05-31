@@ -76,11 +76,33 @@ export default function MyOrders() {
     try {
       if (!window.Pi) { showToast('يرجى الفتح من متصفح Pi'); return; }
       const auth = await window.Pi.authenticate(['username', 'payments', 'wallet_address'], {
-        onIncompletePaymentFound: async (p) => {
+                onIncompletePaymentFound: async (p) => {
           try {
-            await fetch('/api/payment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'approve', paymentId: p.identifier }) });
-            await fetch('/api/payment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'complete', paymentId: p.identifier, txid: p.transaction?.txid || '' }) });
-          } catch(e) {}
+            log('🔄 معالجة دفعة غير مكتملة...', p.identifier);
+            await fetch('/api/payment', { 
+              method: 'POST', 
+              headers: { 'Content-Type': 'application/json' }, 
+              body: JSON.stringify({ action: 'approve', paymentId: p.identifier }) 
+            });
+            
+            // هنا نرسل البيانات الأساسية للسيرفر ليقوم بالحفظ في Airtable
+            await fetch('/api/payment', { 
+              method: 'POST', 
+              headers: { 'Content-Type': 'application/json' }, 
+              body: JSON.stringify({ 
+                action: 'complete', 
+                paymentId: p.identifier, 
+                txid: p.transaction?.txid || '',
+                username: auth.user.username // نستخدم اسم المستخدم الذي سجل دخوله
+              }) 
+            });
+            log('✅ تم إكمال الدفع وتسجيل الطلب');
+            loadOrders(auth.user.username); // تحديث القائمة فوراً
+          } catch(e) {
+            log('❌ خطأ في المعالجة:', e.message);
+          }
+        }
+
         }
       });
       log('✅ تسجيل دخول ناجح:', { username: auth.user.username });
